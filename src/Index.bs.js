@@ -2,7 +2,7 @@
 
 var React = require("react");
 var ReactDom = require("react-dom");
-var Freecell$ReasonReactExamples = require("./Freecell.bs.js");
+var FreecellView$ReasonReactExamples = require("./FreecellView.bs.js");
 var ExampleStyles$ReasonReactExamples = require("./ExampleStyles.bs.js");
 
 var style = document.createElement("style");
@@ -25,7 +25,7 @@ function makeContainer(text) {
   return content;
 }
 
-ReactDom.render(React.createElement(Freecell$ReasonReactExamples.make, { }), makeContainer("Freecell"));
+ReactDom.render(React.createElement(FreecellView$ReasonReactExamples.make, { }), makeContainer("Freecell"));
 
 exports.style = style;
 exports.makeContainer = makeContainer;

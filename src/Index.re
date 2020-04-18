@@ -27,8 +27,7 @@ let makeContainer = text => {
   content;
 };
 
-// All 4 examples.
 ReactDOMRe.render(
-  <Freecell />,
+  <FreecellView />,
   makeContainer("Freecell"),
 );
