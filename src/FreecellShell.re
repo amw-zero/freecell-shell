@@ -22,7 +22,10 @@ type systemError =
   | RequestException
   | Etc;
 
-type environment = {cards: cardMatrix, error: option(systemError)};
+type environment = {
+  cards: cardMatrix,
+  error: option(systemError),
+};
 
 let emptyEnvironment = {cards: [[]], error: None};
 
@@ -31,11 +34,9 @@ type cascadeBuilder = {
   taken: int,
 };
 
-type shell = {
-  environment,
-};
+type shell = {environment};
 
-let makeExecutor = (command) => Js.log("Executing nothing");
+let makeExecutor = command => Js.log("Executing nothing");
 
 module Command = {
   let createGame = (~shuffler=?, _) => {
@@ -46,12 +47,13 @@ module Command = {
           List.concat([a, allPairs(e, s2)])
         );
 
-      let allCards = generateCombinations(allSuits, allRanks)
-      ->Belt.List.map(c => {suit: fst(c), rank: snd(c)});
+      let allCards =
+        generateCombinations(allSuits, allRanks)
+        ->Belt.List.map(c => {suit: fst(c), rank: snd(c)});
 
       switch (shuffler) {
-        | Some(s) => s(allCards)
-        | None => allCards
+      | Some(s) => s(allCards)
+      | None => allCards
       };
     };
 
@@ -94,25 +96,24 @@ module Command = {
 //   | IllegalFreecellMove
 //   | IllegalFoundationMove;
 
-
 // type error =
 //   | Domain(domainError)
 //   | System(systemError);
 
-// type language = 
+// type language =
 //   | StateUpdate(IO.t(environment, error), language) // evaluate will run the IO, apply the new env if successful, or propogate the error into the env if unsuccessful
 //   | NetworkRequest(language) // make a network request
 //   | Leaf;
 
-// let program = 
+// let program =
 //     NetworkRequest(
 //       StateUpdate(
-//         IO.pure(emptyEnvironment), 
+//         IO.pure(emptyEnvironment),
 //         Leaf
 //       )
 //     );
 
-// let errorProgram = 
+// let errorProgram =
 //   NetworkRequest(
 //     StateUpdate(
 //       IO.throw(System(NetworkFailure)),

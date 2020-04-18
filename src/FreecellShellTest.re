@@ -37,20 +37,21 @@ let testCreateGame = () => {
       M.merge(groupCardList(cardList), cardsBySuit, mergeCardsBySuit)
     );
 
-  let shell = ref({ environment: emptyEnvironment });
+  let shell = ref({environment: emptyEnvironment});
   let execute = makeExecutor;
 
-  Command.createGame() |>
-  IO.unsafeRunAsync(r =>
-    switch (r) {
-    | Ok(env) => shell := { environment: env }; ()
-    | Error(_) => ()
-    }
-  );
+  Command.createGame()
+  |> IO.unsafeRunAsync(r =>
+       switch (r) {
+       | Ok(env) =>
+         shell := {environment: env};
+         ();
+       | Error(_) => ()
+       }
+     );
 
   let cardsBySuit = groupCardsBySuit(shell^.environment.cards);
-  let cardsPerSuit =
-    M.valuesToArray(cardsBySuit) |> L.fromArray;
+  let cardsPerSuit = M.valuesToArray(cardsBySuit) |> L.fromArray;
   let allCards = cardsPerSuit |> L.flatten;
 
   [
@@ -61,17 +62,16 @@ let testCreateGame = () => {
     ),
     Bool.assertEqual(
       ~expected=true,
-      ~actual=
-        Belt.List.every(cardsPerSuit, cards => L.length(cards) == 13),
+      ~actual=Belt.List.every(cardsPerSuit, cards => L.length(cards) == 13),
       "Each suit has 13 cards",
     ),
   ];
 };
 
 // let testCreateGameStatement = () => {
-//   let passthroughNetworkBridge = () => 
+//   let passthroughNetworkBridge = () =>
 
 //   let evaluate = evaluator(fetchNetworkBridge);
 // };
 
-runSuite([testCreateGame])
+runSuite([testCreateGame]);
