@@ -1,4 +1,6 @@
 module IO = Relude.IO;
+module O = Relude.Option;
+module L = Relude.List;
 
 type suit =
   | Clubs
@@ -41,7 +43,7 @@ let makeExecutor = command => Js.log("Executing nothing");
 module Command = {
   let createGame = (~shuffler=?, _) => {
     let generateCards = () => {
-      let allPairs = (e, l2) => Belt.List.map(l2, le => (e, le));
+      let allPairs = (e, l2) => L.map(le => (e, le), l2);
       let generateCombinations = (s1, s2) =>
         Belt.List.reduce(s1, [], (a, e) =>
           List.concat([a, allPairs(e, s2)])
@@ -49,27 +51,22 @@ module Command = {
 
       let allCards =
         generateCombinations(allSuits, allRanks)
-        ->Belt.List.map(c => {suit: fst(c), rank: snd(c)});
+        |> L.map(c => {suit: fst(c), rank: snd(c)});
 
-      switch (shuffler) {
-      | Some(s) => s(allCards)
-      | None => allCards
-      };
+      O.fold(allCards, s => s(allCards), shuffler);
     };
 
     let cascadesFrom = cards => {
       let cascadeLengths = [7, 7, 7, 7, 6, 6, 6, 6];
 
       let nextCascade = (cards, drop, take) =>
-        Belt.List.drop(cards, drop)
-        ->Belt.Option.getExn
-        ->Belt.List.take(take)
-        ->Belt.Option.getExn;
+        L.drop(drop, cards) |> L.take(take);
+
       let cardsToCascade = (cascadeBuilder, length) => {
         cascades:
-          Belt.List.add(
-            cascadeBuilder.cascades,
+          L.cons(
             nextCascade(cards, cascadeBuilder.taken, length),
+            cascadeBuilder.cascades,
           ),
         taken: cascadeBuilder.taken + length,
       };

@@ -4,7 +4,8 @@ var List = require("bs-platform/lib/js/list.js");
 var Curry = require("bs-platform/lib/js/curry.js");
 var Belt_List = require("bs-platform/lib/js/belt_List.js");
 var Relude_IO = require("relude/src/Relude_IO.bs.js");
-var Belt_Option = require("bs-platform/lib/js/belt_Option.js");
+var Relude_List = require("relude/src/Relude_List.bs.js");
+var Relude_Option = require("relude/src/Relude_Option.bs.js");
 
 var allSuits = /* :: */[
   /* Clubs */0,
@@ -69,12 +70,12 @@ function makeExecutor(command) {
 function createGame(shuffler, param) {
   var generateCards = function (param) {
     var allPairs = function (e, l2) {
-      return Belt_List.map(l2, (function (le) {
-                    return /* tuple */[
-                            e,
-                            le
-                          ];
-                  }));
+      return Relude_List.map((function (le) {
+                      return /* tuple */[
+                              e,
+                              le
+                            ];
+                    }))(l2);
     };
     var generateCombinations = function (s1, s2) {
       return Belt_List.reduce(s1, /* [] */0, (function (a, e) {
@@ -87,25 +88,23 @@ function createGame(shuffler, param) {
                               ]);
                   }));
     };
-    var allCards = Belt_List.map(generateCombinations(allSuits, allRanks), (function (c) {
-            return {
-                    suit: c[0],
-                    rank: c[1]
-                  };
-          }));
-    if (shuffler !== undefined) {
-      return Curry._1(shuffler, allCards);
-    } else {
-      return allCards;
-    }
+    var allCards = Relude_List.map((function (c) {
+              return {
+                      suit: c[0],
+                      rank: c[1]
+                    };
+            }))(generateCombinations(allSuits, allRanks));
+    return Relude_Option.fold(allCards, (function (s) {
+                  return Curry._1(s, allCards);
+                }), shuffler);
   };
   var cascadesFrom = function (cards) {
     var nextCascade = function (cards, drop, take) {
-      return Belt_Option.getExn(Belt_List.take(Belt_Option.getExn(Belt_List.drop(cards, drop)), take));
+      return Relude_List.take(take, Relude_List.drop(drop, cards));
     };
     var cardsToCascade = function (cascadeBuilder, length) {
       return {
-              cascades: Belt_List.add(cascadeBuilder.cascades, nextCascade(cards, cascadeBuilder.taken, length)),
+              cascades: Relude_List.cons(nextCascade(cards, cascadeBuilder.taken, length), cascadeBuilder.cascades),
               taken: cascadeBuilder.taken + length | 0
             };
     };
@@ -152,6 +151,10 @@ var Command = {
 
 var IO = /* alias */0;
 
+var O = /* alias */0;
+
+var L = /* alias */0;
+
 var emptyEnvironment = {
   cards: /* :: */[
     /* [] */0,
@@ -161,6 +164,8 @@ var emptyEnvironment = {
 };
 
 exports.IO = IO;
+exports.O = O;
+exports.L = L;
 exports.allSuits = allSuits;
 exports.allRanks = allRanks;
 exports.emptyEnvironment = emptyEnvironment;

@@ -27,7 +27,10 @@ let make = () => {
        |> O.flatMap(L.head)
        |> O.fold("none", c => string_of_int(c.rank)),
      )}
-    <button onClick={_ => Command.createGame() |> applyToView}>
+    <button
+      onClick={_ =>
+        Command.createGame(~shuffler=L.shuffle, ()) |> applyToView
+      }>
       {React.string("Create game")}
     </button>
   </>;

@@ -37,7 +37,7 @@ function FreecellView(Props) {
                     return String(c.rank);
                   }), Curry._2(Relude_Option.flatMap, Relude_List.head, Relude_List.head(match[0].cards))), React.createElement("button", {
                   onClick: (function (param) {
-                      var io = FreecellShell$ReasonReactExamples.Command.createGame(undefined, /* () */0);
+                      var io = FreecellShell$ReasonReactExamples.Command.createGame(Relude_List.shuffle, /* () */0);
                       return Relude_IO.unsafeRunAsync(handleCommandResult, io);
                     })
                 }, "Create game"));
