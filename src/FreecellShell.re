@@ -45,9 +45,7 @@ module Command = {
     let generateCards = () => {
       let allPairs = (e, l2) => L.map(le => (e, le), l2);
       let generateCombinations = (s1, s2) =>
-        Belt.List.reduce(s1, [], (a, e) =>
-          List.concat([a, allPairs(e, s2)])
-        );
+        Belt.List.reduce(s1, [], (a, e) => a @ allPairs(e, s2));
 
       let allCards =
         generateCombinations(allSuits, allRanks)
@@ -58,26 +56,20 @@ module Command = {
 
     let cascadesFrom = cards => {
       let cascadeLengths = [7, 7, 7, 7, 6, 6, 6, 6];
-
       let nextCascade = (cards, drop, take) =>
         L.drop(drop, cards) |> L.take(take);
+      let appendCascade = (cards, cascadeBuilder, length) =>
+        [nextCascade(cards, cascadeBuilder.taken, length)]
+        @ cascadeBuilder.cascades;
 
       let cardsToCascade = (cascadeBuilder, length) => {
-        cascades:
-          L.cons(
-            nextCascade(cards, cascadeBuilder.taken, length),
-            cascadeBuilder.cascades,
-          ),
+        cascades: appendCascade(cards, cascadeBuilder, length),
         taken: cascadeBuilder.taken + length,
       };
 
-      Belt.List.reduce(
-        cascadeLengths,
-        {cascades: [], taken: 0},
-        cardsToCascade,
-      ).
+      L.foldLeft(cardsToCascade, {cascades: [], taken: 0}, cascadeLengths).
         cascades
-      |> Belt.List.reverse;
+      |> L.reverse;
     };
 
     let cards = generateCards();

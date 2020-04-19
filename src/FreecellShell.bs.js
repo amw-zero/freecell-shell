@@ -1,9 +1,9 @@
 'use strict';
 
-var List = require("bs-platform/lib/js/list.js");
 var Curry = require("bs-platform/lib/js/curry.js");
 var Belt_List = require("bs-platform/lib/js/belt_List.js");
 var Relude_IO = require("relude/src/Relude_IO.bs.js");
+var Pervasives = require("bs-platform/lib/js/pervasives.js");
 var Relude_List = require("relude/src/Relude_List.bs.js");
 var Relude_Option = require("relude/src/Relude_Option.bs.js");
 
@@ -79,13 +79,7 @@ function createGame(shuffler, param) {
     };
     var generateCombinations = function (s1, s2) {
       return Belt_List.reduce(s1, /* [] */0, (function (a, e) {
-                    return List.concat(/* :: */[
-                                a,
-                                /* :: */[
-                                  allPairs(e, s2),
-                                  /* [] */0
-                                ]
-                              ]);
+                    return Pervasives.$at(a, allPairs(e, s2));
                   }));
     };
     var allCards = Relude_List.map((function (c) {
@@ -102,13 +96,22 @@ function createGame(shuffler, param) {
     var nextCascade = function (cards, drop, take) {
       return Relude_List.take(take, Relude_List.drop(drop, cards));
     };
+    var appendCascade = function (cards, cascadeBuilder, length) {
+      return Pervasives.$at(/* :: */[
+                  nextCascade(cards, cascadeBuilder.taken, length),
+                  /* [] */0
+                ], cascadeBuilder.cascades);
+    };
     var cardsToCascade = function (cascadeBuilder, length) {
       return {
-              cascades: Relude_List.cons(nextCascade(cards, cascadeBuilder.taken, length), cascadeBuilder.cascades),
+              cascades: appendCascade(cards, cascadeBuilder, length),
               taken: cascadeBuilder.taken + length | 0
             };
     };
-    return Belt_List.reverse(Belt_List.reduce(/* :: */[
+    return Relude_List.reverse(Relude_List.foldLeft(cardsToCascade, {
+                      cascades: /* [] */0,
+                      taken: 0
+                    })(/* :: */[
                     7,
                     /* :: */[
                       7,
@@ -132,10 +135,7 @@ function createGame(shuffler, param) {
                         ]
                       ]
                     ]
-                  ], {
-                    cascades: /* [] */0,
-                    taken: 0
-                  }, cardsToCascade).cascades);
+                  ]).cascades);
   };
   var cards = generateCards(/* () */0);
   var cascades = cascadesFrom(cards);
