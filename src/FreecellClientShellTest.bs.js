@@ -7,12 +7,13 @@ var Belt_List = require("bs-platform/lib/js/belt_List.js");
 var Relude_IO = require("relude/src/Relude_IO.bs.js");
 var Relude_List = require("relude/src/Relude_List.bs.js");
 var TestLib$ReasonReactExamples = require("./TestLib.bs.js");
-var FreecellShell$ReasonReactExamples = require("./FreecellShell.bs.js");
+var FreecellShared$ReasonReactExamples = require("./FreecellShared.bs.js");
+var FreecellClientShell$ReasonReactExamples = require("./FreecellClientShell.bs.js");
 
 function testCreateGame(param) {
   var shell = {
     contents: {
-      environment: FreecellShell$ReasonReactExamples.emptyEnvironment
+      environment: FreecellClientShell$ReasonReactExamples.emptyEnvironment
     }
   };
   Relude_IO.unsafeRunAsync((function (r) {
@@ -24,7 +25,7 @@ function testCreateGame(param) {
             };
             return /* () */0;
           }
-        }), FreecellShell$ReasonReactExamples.Command.createGame(undefined, /* () */0));
+        }), FreecellClientShell$ReasonReactExamples.Command.createGame(undefined, /* () */0));
   var groupCardsBySuit = function (cascades) {
     var cardsBySuit = Hashtbl.create(undefined, 52);
     Belt_List.forEach(cascades, (function (cascade) {
@@ -37,7 +38,7 @@ function testCreateGame(param) {
   var cardsBySuit = groupCardsBySuit(shell.contents.environment.cards);
   var cardsPerSuit = Relude_List.map((function (suit) {
             return Hashtbl.find_all(cardsBySuit, suit);
-          }))(FreecellShell$ReasonReactExamples.allSuits);
+          }))(FreecellShared$ReasonReactExamples.allSuits);
   var allCards = Curry._1(Relude_List.flatten, cardsPerSuit);
   return /* :: */[
           TestLib$ReasonReactExamples.Int.assertEqual(52, List.length(allCards), "52 cards are dealt"),

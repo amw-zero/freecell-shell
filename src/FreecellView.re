@@ -1,5 +1,6 @@
-open FreecellShell;
-module Command = FreecellShell.Command;
+open FreecellShared;
+open FreecellClientShell;
+
 module IO = Relude.IO;
 module L = Relude.List;
 module O = Relude.Option;

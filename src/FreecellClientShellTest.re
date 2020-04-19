@@ -1,5 +1,6 @@
 open TestLib;
-open FreecellShell;
+open FreecellClientShell;
+open FreecellShared;
 
 module L = Relude.List;
 module O = Belt.Option;
@@ -8,6 +9,7 @@ module RA = Relude.Array;
 let testCreateGame = () => {
   let shell = ref({environment: emptyEnvironment});
 
+//  let server = FreecellServer
   Command.createGame()
   |> IO.unsafeRunAsync(r =>
        switch (r) {

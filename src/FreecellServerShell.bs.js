@@ -61,12 +61,7 @@ var allRanks = /* :: */[
   ]
 ];
 
-function makeExecutor(command) {
-  console.log("Executing nothing");
-  return /* () */0;
-}
-
-function createGame(shuffler, param) {
+function createGame(shuffler) {
   var generateCards = function (param) {
     var allPairs = function (e, l2) {
       return Relude_List.map((function (le) {
@@ -150,24 +145,14 @@ var Command = {
 
 var IO = /* alias */0;
 
-var O = /* alias */0;
-
 var L = /* alias */0;
 
-var emptyEnvironment = {
-  cards: /* :: */[
-    /* [] */0,
-    /* [] */0
-  ],
-  error: undefined
-};
+var O = /* alias */0;
 
 exports.IO = IO;
-exports.O = O;
 exports.L = L;
+exports.O = O;
 exports.allSuits = allSuits;
 exports.allRanks = allRanks;
-exports.emptyEnvironment = emptyEnvironment;
-exports.makeExecutor = makeExecutor;
 exports.Command = Command;
 /* Relude_IO Not a pure module */

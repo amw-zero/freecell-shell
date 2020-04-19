@@ -1,47 +1,18 @@
+open FreecellShared;
+
 module IO = Relude.IO;
-module O = Relude.Option;
 module L = Relude.List;
-
-type suit =
-  | Clubs
-  | Diamonds
-  | Hearts
-  | Spades;
-
-type card = {
-  suit,
-  rank: int,
-};
+module O = Relude.Option;
 
 let allSuits = [Clubs, Diamonds, Hearts, Spades];
 let allRanks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 
-type cardList = list(card);
-type cardMatrix = list(cardList);
-
-type systemError =
-  | NetworkFailure
-  | RequestException
-  | Etc;
-
-type environment = {
-  cards: cardMatrix,
-  error: option(systemError),
-};
-
-let emptyEnvironment = {cards: [[]], error: None};
-
-type cascadeBuilder = {
-  cascades: list(list(card)),
-  taken: int,
-};
-
-type shell = {environment};
-
-let makeExecutor = command => Js.log("Executing nothing");
-
 module Command = {
-  let createGame = (~shuffler=?, _) => {
+  type cascadeBuilder = {
+    cascades: list(list(card)),
+    taken: int,
+  };
+  let createGame = (~shuffler) => {
     let generateCards = () => {
       let allPairs = (e, l2) => L.map(le => (e, le), l2);
       let generateCombinations = (s1, s2) =>
@@ -76,5 +47,5 @@ module Command = {
     let cascades = cascadesFrom(cards);
 
     IO.pure({cards: cascades, error: None});
-  };
+  }
 };

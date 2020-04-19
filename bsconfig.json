@@ -15,9 +15,12 @@
   "suffix": ".bs.js",
   "namespace": true,
   "bs-dependencies": [
+    "bs-bastet",
+    "decco",
+    "serbet",
     "reason-react",
     "relude",
-    "bs-bastet"
   ],
+  "ppx-flags": ["decco/ppx", "bs-let/ppx"],
   "refmt": 3
 }

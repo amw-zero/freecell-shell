@@ -5,19 +5,19 @@ var React = require("react");
 var Relude_IO = require("relude/src/Relude_IO.bs.js");
 var Relude_List = require("relude/src/Relude_List.bs.js");
 var Relude_Option = require("relude/src/Relude_Option.bs.js");
-var FreecellShell$ReasonReactExamples = require("./FreecellShell.bs.js");
+var FreecellClientShell$ReasonReactExamples = require("./FreecellClientShell.bs.js");
 
 function fetchNetworkBridge(param) {
   return Relude_IO.pure(5);
 }
 
 var shell = {
-  environment: FreecellShell$ReasonReactExamples.emptyEnvironment
+  environment: FreecellClientShell$ReasonReactExamples.emptyEnvironment
 };
 
 function FreecellView(Props) {
   var match = React.useState((function () {
-          return FreecellShell$ReasonReactExamples.emptyEnvironment;
+          return FreecellClientShell$ReasonReactExamples.emptyEnvironment;
         }));
   var setState = match[1];
   var handleCommandResult = function (r) {
@@ -37,13 +37,11 @@ function FreecellView(Props) {
                     return String(c.rank);
                   }), Curry._2(Relude_Option.flatMap, Relude_List.head, Relude_List.head(match[0].cards))), React.createElement("button", {
                   onClick: (function (param) {
-                      var io = FreecellShell$ReasonReactExamples.Command.createGame(Relude_List.shuffle, /* () */0);
+                      var io = FreecellClientShell$ReasonReactExamples.Command.createGame(Relude_List.shuffle, /* () */0);
                       return Relude_IO.unsafeRunAsync(handleCommandResult, io);
                     })
                 }, "Create game"));
 }
-
-var Command = /* alias */0;
 
 var IO = /* alias */0;
 
@@ -53,7 +51,6 @@ var O = /* alias */0;
 
 var make = FreecellView;
 
-exports.Command = Command;
 exports.IO = IO;
 exports.L = L;
 exports.O = O;
