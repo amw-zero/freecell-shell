@@ -10,15 +10,6 @@ var TestLib$ReasonReactExamples = require("./TestLib.bs.js");
 var FreecellShell$ReasonReactExamples = require("./FreecellShell.bs.js");
 
 function testCreateGame(param) {
-  var groupCardsBySuit = function (cascades) {
-    var cardsBySuit = Hashtbl.create(undefined, 52);
-    Belt_List.forEach(cascades, (function (cascade) {
-            return Belt_List.forEach(cascade, (function (c) {
-                          return Hashtbl.add(cardsBySuit, c.suit, c);
-                        }));
-          }));
-    return cardsBySuit;
-  };
   var shell = {
     contents: {
       environment: FreecellShell$ReasonReactExamples.emptyEnvironment
@@ -34,6 +25,15 @@ function testCreateGame(param) {
             return /* () */0;
           }
         }), FreecellShell$ReasonReactExamples.Command.createGame(undefined, /* () */0));
+  var groupCardsBySuit = function (cascades) {
+    var cardsBySuit = Hashtbl.create(undefined, 52);
+    Belt_List.forEach(cascades, (function (cascade) {
+            return Belt_List.forEach(cascade, (function (c) {
+                          return Hashtbl.add(cardsBySuit, c.suit, c);
+                        }));
+          }));
+    return cardsBySuit;
+  };
   var cardsBySuit = groupCardsBySuit(shell.contents.environment.cards);
   var cardsPerSuit = Relude_List.map((function (suit) {
             return Hashtbl.find_all(cardsBySuit, suit);

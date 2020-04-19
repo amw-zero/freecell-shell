@@ -5,18 +5,8 @@ module L = Relude.List;
 module O = Belt.Option;
 module RA = Relude.Array;
 
-let testCreateGame = () => {
-  let groupCardsBySuit = cascades => {
-    let cardsBySuit = Hashtbl.create(52);
-    Belt.List.forEach(cascades, cascade =>
-      Belt.List.forEach(cascade, c => Hashtbl.add(cardsBySuit, c.suit, c))
-    );
-
-    cardsBySuit;
-  };
-
+let testCreateGame = () => {  
   let shell = ref({environment: emptyEnvironment});
-  let execute = makeExecutor;
 
   Command.createGame()
   |> IO.unsafeRunAsync(r =>
@@ -28,6 +18,14 @@ let testCreateGame = () => {
        }
      );
 
+  let groupCardsBySuit = cascades => {
+    let cardsBySuit = Hashtbl.create(52);
+    Belt.List.forEach(cascades, cascade =>
+      Belt.List.forEach(cascade, c => Hashtbl.add(cardsBySuit, c.suit, c))
+    );
+
+    cardsBySuit;
+  };
   let cardsBySuit = groupCardsBySuit(shell^.environment.cards);
   let cardsPerSuit =
     allSuits |> L.map(suit => Hashtbl.find_all(cardsBySuit, suit));
