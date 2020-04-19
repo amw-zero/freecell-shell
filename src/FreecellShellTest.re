@@ -1,41 +1,19 @@
 open TestLib;
 open FreecellShell;
 
-module M = Belt.Map;
 module L = Relude.List;
 module O = Belt.Option;
 module RA = Relude.Array;
 
-module SuitComparable =
-  Belt.Id.MakeComparable({
-    type t = suit;
-    let cmp = (e1, e2) => Pervasives.compare(e1, e2);
-  });
-
 let testCreateGame = () => {
-  let cardListSuitReducer = (cardsBySuit, card) =>
-    M.update(cardsBySuit, card.suit, oCards =>
-      O.map(oCards, cards => [card, ...cards])
+  let groupCardsBySuit = cascades => {
+    let cardsBySuit = Hashtbl.create(52);
+    Belt.List.forEach(cascades, cascade =>
+      Belt.List.forEach(cascade, c => Hashtbl.add(cardsBySuit, c.suit, c))
     );
 
-  let suitMap = () => {
-    let map = M.make(~id=(module SuitComparable));
-    L.foldLeft((m, s) => M.set(m, s, []), map, allSuits);
+    cardsBySuit;
   };
-
-  let groupCardList = cards =>
-    L.foldLeft(cardListSuitReducer, suitMap(), cards);
-
-  let mergeCardsBySuit = (_, c1, c2) =>
-    switch (c1, c2) {
-    | (Some(cards1), Some(cards2)) => Some(List.concat([cards1, cards2]))
-    | _ => None
-    };
-
-  let groupCardsBySuit = cards =>
-    Belt.List.reduce(cards, suitMap(), (cardsBySuit, cardList) =>
-      M.merge(groupCardList(cardList), cardsBySuit, mergeCardsBySuit)
-    );
 
   let shell = ref({environment: emptyEnvironment});
   let execute = makeExecutor;
@@ -51,7 +29,8 @@ let testCreateGame = () => {
      );
 
   let cardsBySuit = groupCardsBySuit(shell^.environment.cards);
-  let cardsPerSuit = M.valuesToArray(cardsBySuit) |> L.fromArray;
+  let cardsPerSuit =
+    allSuits |> L.map(suit => Hashtbl.find_all(cardsBySuit, suit));
   let allCards = cardsPerSuit |> L.flatten;
 
   [
@@ -67,11 +46,5 @@ let testCreateGame = () => {
     ),
   ];
 };
-
-// let testCreateGameStatement = () => {
-//   let passthroughNetworkBridge = () =>
-
-//   let evaluate = evaluator(fetchNetworkBridge);
-// };
 
 runSuite([testCreateGame]);
