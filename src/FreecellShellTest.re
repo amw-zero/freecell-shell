@@ -20,9 +20,9 @@ let testCreateGame = () => {
 
   let groupCardsBySuit = cascades => {
     let cardsBySuit = Hashtbl.create(52);
-    Belt.List.forEach(cascades, cascade =>
-      Belt.List.forEach(cascade, c => Hashtbl.add(cardsBySuit, c.suit, c))
-    );
+    Belt.List.(forEach(cascades, cascade =>
+      forEach(cascade, c => Hashtbl.add(cardsBySuit, c.suit, c))
+    ));
 
     cardsBySuit;
   };
