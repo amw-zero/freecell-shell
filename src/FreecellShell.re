@@ -45,7 +45,7 @@ module Command = {
     let generateCards = () => {
       let allPairs = (e, l2) => L.map(le => (e, le), l2);
       let generateCombinations = (s1, s2) =>
-        Belt.List.reduce(s1, [], (a, e) => a @ allPairs(e, s2));
+        L.foldLeft((a, e) => a @ allPairs(e, s2), [], s1);
 
       let allCards =
         generateCombinations(allSuits, allRanks)

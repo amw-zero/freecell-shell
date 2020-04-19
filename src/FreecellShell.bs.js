@@ -1,7 +1,6 @@
 'use strict';
 
 var Curry = require("bs-platform/lib/js/curry.js");
-var Belt_List = require("bs-platform/lib/js/belt_List.js");
 var Relude_IO = require("relude/src/Relude_IO.bs.js");
 var Pervasives = require("bs-platform/lib/js/pervasives.js");
 var Relude_List = require("relude/src/Relude_List.bs.js");
@@ -78,9 +77,9 @@ function createGame(shuffler, param) {
                     }))(l2);
     };
     var generateCombinations = function (s1, s2) {
-      return Belt_List.reduce(s1, /* [] */0, (function (a, e) {
-                    return Pervasives.$at(a, allPairs(e, s2));
-                  }));
+      return Relude_List.foldLeft((function (a, e) {
+                      return Pervasives.$at(a, allPairs(e, s2));
+                    }), /* [] */0)(s1);
     };
     var allCards = Relude_List.map((function (c) {
               return {
