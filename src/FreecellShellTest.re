@@ -5,24 +5,24 @@ module L = Relude.List;
 module O = Belt.Option;
 module RA = Relude.Array;
 
-let testCreateGame = () => {  
+let testCreateGame = () => {
   let shell = ref({environment: emptyEnvironment});
 
   Command.createGame()
   |> IO.unsafeRunAsync(r =>
        switch (r) {
-       | Ok(env) =>
-         shell := {environment: env};
-         ();
+       | Ok(env) => shell := {environment: env}
        | Error(_) => ()
        }
      );
 
   let groupCardsBySuit = cascades => {
     let cardsBySuit = Hashtbl.create(52);
-    Belt.List.(forEach(cascades, cascade =>
-      forEach(cascade, c => Hashtbl.add(cardsBySuit, c.suit, c))
-    ));
+    Belt.List.(
+      forEach(cascades, cascade =>
+        forEach(cascade, c => Hashtbl.add(cardsBySuit, c.suit, c))
+      )
+    );
 
     cardsBySuit;
   };
