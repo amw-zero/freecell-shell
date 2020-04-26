@@ -26,3 +26,7 @@ type environment = {
 
 let allSuits = [Clubs, Diamonds, Hearts, Spades];
 let allRanks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+
+
+let endpointRegistry: Hashtbl.t(int, int) = Hashtbl.create(50);
+Hashtbl.add(endpointRegistry, 5);

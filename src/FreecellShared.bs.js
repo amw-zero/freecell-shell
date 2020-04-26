@@ -2,6 +2,7 @@
 
 var Block = require("bs-platform/lib/js/block.js");
 var Decco = require("decco/src/Decco.js");
+var Hashtbl = require("bs-platform/lib/js/hashtbl.js");
 var Js_dict = require("bs-platform/lib/js/js_dict.js");
 var Js_json = require("bs-platform/lib/js/js_json.js");
 var Belt_Array = require("bs-platform/lib/js/belt_Array.js");
@@ -113,6 +114,8 @@ function card_decode(v) {
   }
 }
 
+var endpointRegistry = Hashtbl.create(undefined, 50);
+
 var allSuits = /* :: */[
   /* Clubs */0,
   /* :: */[
@@ -174,4 +177,5 @@ exports.card_encode = card_encode;
 exports.card_decode = card_decode;
 exports.allSuits = allSuits;
 exports.allRanks = allRanks;
-/* No side effect */
+exports.endpointRegistry = endpointRegistry;
+/* endpointRegistry Not a pure module */

@@ -47,5 +47,5 @@ module Command = {
     let cascades = cascadesFrom(cards);
 
     IO.pure({cards: cascades, error: None});
-  }
+  };
 };
